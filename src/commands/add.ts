@@ -1,6 +1,6 @@
 import { BrasaSkillsError } from "../errors.js";
 import { saveInstallEntry } from "../install-file.js";
-import { resolveDestination } from "../paths.js";
+import { resolveDefaultInstallFile, resolveDestination } from "../paths.js";
 import type { DestinationOptions, InstallScope, TargetKind } from "../types.js";
 
 export interface AddCommandOptions extends DestinationOptions {
@@ -21,19 +21,15 @@ function destinationMetadata(options: AddCommandOptions): {
 }
 
 export async function runAddCommand(options: AddCommandOptions): Promise<void> {
-  if (!options.skillsFile) {
-    throw new BrasaSkillsError(
-      "Provide --skills <file> to choose the install JSON to update.",
-    );
-  }
   if (!options.repo) {
     throw new BrasaSkillsError(
       "Provide --repo <owner/repo> to add an install entry.",
     );
   }
+  const skillsFile = options.skillsFile ?? resolveDefaultInstallFile(options);
   const destination = destinationMetadata(options);
   const result = await saveInstallEntry({
-    file: options.skillsFile,
+    file: skillsFile,
     repo: options.repo,
     skill: options.skill,
     target: destination.target,

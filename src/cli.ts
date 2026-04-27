@@ -28,12 +28,12 @@ addDestinationOptions(
   program
     .command("install")
     .description(
-      "Install or update skills from a repo or .brasa/skills.install.json file.",
+      "Install or update skills from a repo or .llms/skills.json file.",
     )
     .option("--repo <owner/repo>", "Skill repository")
     .option("--skill <name>", "Specific skill to install from --repo")
-    .option("--skills <file>", "Batch install JSON file")
-    .option("--save", "Save the requested --repo/--skill into --skills")
+    .option("--skills <file>", "Batch install JSON file override")
+    .option("--save", "Save the requested --repo/--skill into the install file")
     .option("--ref <ref>", "Git ref to install", "main")
     .option("--marketplace <file>", "Additional marketplace JSON file")
     .option("--dry-run", "Print actions without writing files")
@@ -58,8 +58,8 @@ addDestinationOptions(
 addDestinationOptions(
   program
     .command("add")
-    .description("Add or update an entry in a .brasa/skills.install.json file.")
-    .option("--skills <file>", "Install JSON file to update")
+    .description("Add or update an entry in a .llms/skills.json file.")
+    .option("--skills <file>", "Install JSON file override")
     .option("--repo <owner/repo>", "Skill repository")
     .option("--skill <name>", "Specific skill to add from --repo")
     .option("--ref <ref>", "Git ref to save", "main")

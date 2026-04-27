@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { assertSafeRelativePath, resolveDestination } from "../src/paths.js";
+import {
+  assertSafeRelativePath,
+  resolveDefaultInstallFile,
+  resolveDestination,
+} from "../src/paths.js";
 
 describe("path and destination resolution", () => {
   it("defaults to project-local codex skills", () => {
@@ -25,6 +29,19 @@ describe("path and destination resolution", () => {
       scope: "global",
       root: "/tmp/home/.agents/skills",
     });
+  });
+
+  it("resolves project and global default install files", () => {
+    expect(
+      resolveDefaultInstallFile({ cwd: "/tmp/project", home: "/tmp/home" }),
+    ).toBe("/tmp/project/.llms/skills.json");
+    expect(
+      resolveDefaultInstallFile({
+        global: true,
+        cwd: "/tmp/project",
+        home: "/tmp/home",
+      }),
+    ).toBe("/tmp/home/.llms/skills.json");
   });
 
   it("rejects unsafe relative paths", () => {

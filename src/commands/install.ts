@@ -9,7 +9,7 @@ import { BrasaSkillsError } from "../errors.js";
 import { fetchRemoteMarketplace, prepareGithubRepo } from "../github.js";
 import { saveInstallEntry } from "../install-file.js";
 import { installSkillFromRepoRoot } from "../installer.js";
-import { resolveDestination } from "../paths.js";
+import { resolveDefaultInstallFile, resolveDestination } from "../paths.js";
 import {
   parseInstallFile,
   parseMarketplace,
@@ -83,10 +83,23 @@ function requestsFromDirectOptions(options: InstallOptions): InstallRequest[] {
   return [{ repo: options.repo, skill: options.skill, ref: options.ref }];
 }
 
+function resolveInstallFileForRead(
+  options: InstallOptions,
+): string | undefined {
+  if (options.skillsFile) {
+    return options.skillsFile;
+  }
+  if (options.repo || options.skill) {
+    return undefined;
+  }
+  return resolveDefaultInstallFile(options);
+}
+
 async function requestsFromSkillsFile(
   options: InstallOptions,
 ): Promise<InstallRequest[]> {
-  if (!options.skillsFile) {
+  const skillsFile = resolveInstallFileForRead(options);
+  if (!skillsFile) {
     return requestsFromDirectOptions(options);
   }
   if (options.repo || options.skill) {
@@ -102,7 +115,7 @@ async function requestsFromSkillsFile(
       "Use --save with --repo to choose what to save.",
     );
   }
-  const installFile = parseInstallFile(await readJsonFile(options.skillsFile));
+  const installFile = parseInstallFile(await readJsonFile(skillsFile));
   const cliOverrides = cliDestinationOverrides(options);
   return installFile.skills.map((item) => ({
     repo: item.repo,
@@ -159,9 +172,6 @@ async function saveRequestedInstall(
   if (!options.save) {
     return undefined;
   }
-  if (!options.skillsFile) {
-    throw new BrasaSkillsError("Use --save with --skills <file>.");
-  }
   if (!options.repo) {
     throw new BrasaSkillsError("Use --save with --repo <owner/repo>.");
   }
@@ -169,8 +179,9 @@ async function saveRequestedInstall(
   if (!firstInstall) {
     throw new BrasaSkillsError("No install target resolved for --save.");
   }
+  const skillsFile = options.skillsFile ?? resolveDefaultInstallFile(options);
   return saveInstallEntry({
-    file: options.skillsFile,
+    file: skillsFile,
     repo: options.repo,
     skill: options.skill,
     target: firstInstall.destination.target,

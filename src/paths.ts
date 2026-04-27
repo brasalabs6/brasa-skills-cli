@@ -57,3 +57,20 @@ export function resolveDestination(
   );
   return { target, scope, root };
 }
+
+export const DEFAULT_INSTALL_FILE_RELATIVE_PATH = ".llms/skills.json";
+
+export function resolveDefaultInstallFile(
+  options: Pick<DestinationOptions, "project" | "global" | "cwd" | "home"> = {},
+): string {
+  if (options.project && options.global) {
+    throw new BrasaSkillsError("Use only one of --project or --global.");
+  }
+  const scope: InstallScope = options.global ? "global" : "project";
+  const base =
+    scope === "global"
+      ? (options.home ?? homedir())
+      : (options.cwd ?? process.cwd());
+  // The .llms default is the only implicit install-file mutation target; custom files still require --skills.
+  return path.resolve(base, DEFAULT_INSTALL_FILE_RELATIVE_PATH);
+}

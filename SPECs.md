@@ -10,10 +10,10 @@
 - Provide a binary named `brasa-skills`.
 - Support installing one skill with `--repo` and `--skill`.
 - Support installing all skills in a repo when `--repo` is provided without `--skill`.
-- Support batch installation from `.brasa/skills.install.json` through `--skills`.
-- Support adding or updating install-file entries with `brasa-skills add --skills <file> --repo <owner/repo> [--skill <name>]`.
-- Support `brasa-skills install --skills <file> --repo <owner/repo> [--skill <name>] --save` to install and upsert the requested entry in the same command.
-- `--save` MUST require an explicit `--skills` file and `--repo` so the CLI never guesses which repository install list to mutate.
+- Support batch installation from the resolved `.llms/skills.json` default or a custom install file through `--skills`.
+- Support adding or updating install-file entries with `brasa-skills add --repo <owner/repo> [--skill <name>]`, defaulting to `.llms/skills.json` unless `--skills <file>` is provided.
+- Support `brasa-skills install --repo <owner/repo> [--skill <name>] --save` to install and upsert the requested entry in the same command, defaulting to `.llms/skills.json` unless `--skills <file>` is provided.
+- `--save` MUST require `--repo` and MUST mutate only the resolved `.llms/skills.json` default or an explicit `--skills` file.
 - Saved install entries MUST be deduplicated by `repo` plus optional `skill`, preserving repo-wide entries as distinct from per-skill entries.
 - Support destination flags `--codex`, `--agents`, `--project`, and `--global`.
 - Default destination MUST be project-local `.codex/skills`.
