@@ -19,7 +19,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check src tests scripts",
     "test": "vitest run",
-    "start": "node dist/cli.js"
+    "start": "node dist/cli.js",
+    "pack:dry-run": "pnpm build && npm pack --dry-run",
+    "pack:check": "node scripts/check-package-artifact.mjs",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:release": "pnpm check && npm pack --dry-run && pnpm pack:check"
   },
   "engines": {
     "node": ">=20"

@@ -54,3 +54,23 @@ pnpm lint
 pnpm test
 pnpm build
 ```
+
+## Release Readiness
+
+Run the release readiness matrix before publishing or cutting a GitHub release:
+
+```bash
+pnpm check:release
+```
+
+For local tarball installation and publish gates, see `docs/release.md`.
+
+## Automatic Updates
+
+Automatic skill updates are not enabled by default. Use explicit, reviewable installs such as:
+
+```bash
+brasa-skills install --skills .brasa/skills.install.json
+```
+
+For the recommended opt-in update strategy, see `docs/automatic-updates.md`.

@@ -16,6 +16,7 @@ This repository owns the `@brasalabs/skills` TypeScript package and `brasa-skill
 - Keep `.brasa/skills.marketplace.json` and `.brasa/skills.install.json` schemas backward compatible within the same `schemaVersion`.
 - Reject absolute paths and parent-directory traversal in skill paths before any filesystem write.
 - Updates MUST replace installed skill directories transactionally rather than merging files.
+- Automatic skill updates MUST be opt-in and MUST NOT run as an unattended daemon or cron job by default.
 - Do not claim ownership of individual skill content; source skill repositories own their own `SKILL.md` contracts.
 
 ## Commands
@@ -24,6 +25,7 @@ This repository owns the `@brasalabs/skills` TypeScript package and `brasa-skill
 - `pnpm lint`
 - `pnpm test`
 - `pnpm build`
+- `pnpm check:release`
 
 ## What Not To Do
 

@@ -16,6 +16,8 @@
 - Update already installed skills by replacing them transactionally.
 - Define JSON schemas for marketplace and batch install files.
 - Include an embedded marketplace for `brasalabs6/skills-for-planning` and `brasalabs6/skills-for-git`.
+- Provide release-readiness validation for build, pack, local tarball install, and CLI smoke checks.
+- Keep automatic updates opt-in and reviewable; no background updater is enabled by default.
 
 ## Non-Goals
 
