@@ -7,6 +7,7 @@ import {
 } from "../catalog.js";
 import { BrasaSkillsError } from "../errors.js";
 import { fetchRemoteMarketplace, prepareGithubRepo } from "../github.js";
+import { saveInstallEntry } from "../install-file.js";
 import { installSkillFromRepoRoot } from "../installer.js";
 import { resolveDestination } from "../paths.js";
 import {
@@ -89,7 +90,17 @@ async function requestsFromSkillsFile(
     return requestsFromDirectOptions(options);
   }
   if (options.repo || options.skill) {
-    throw new BrasaSkillsError("Use --skills separately from --repo/--skill.");
+    if (!options.save) {
+      throw new BrasaSkillsError(
+        "Use --save when combining --skills with --repo/--skill.",
+      );
+    }
+    return requestsFromDirectOptions(options);
+  }
+  if (options.save) {
+    throw new BrasaSkillsError(
+      "Use --save with --repo to choose what to save.",
+    );
   }
   const installFile = parseInstallFile(await readJsonFile(options.skillsFile));
   const cliOverrides = cliDestinationOverrides(options);
@@ -141,10 +152,39 @@ async function resolveInstalls(
   return installs;
 }
 
+async function saveRequestedInstall(
+  options: InstallOptions,
+  installs: ResolvedSkillInstall[],
+) {
+  if (!options.save) {
+    return undefined;
+  }
+  if (!options.skillsFile) {
+    throw new BrasaSkillsError("Use --save with --skills <file>.");
+  }
+  if (!options.repo) {
+    throw new BrasaSkillsError("Use --save with --repo <owner/repo>.");
+  }
+  const firstInstall = installs[0];
+  if (!firstInstall) {
+    throw new BrasaSkillsError("No install target resolved for --save.");
+  }
+  return saveInstallEntry({
+    file: options.skillsFile,
+    repo: options.repo,
+    skill: options.skill,
+    target: firstInstall.destination.target,
+    scope: firstInstall.destination.scope,
+    ref: firstInstall.ref,
+    dryRun: options.dryRun,
+  });
+}
+
 export async function runInstallCommand(
   options: InstallOptions,
 ): Promise<void> {
   const installs = await resolveInstalls(options);
+  const saveResult = await saveRequestedInstall(options, installs);
   const byRepo = new Map<string, ResolvedSkillInstall[]>();
   for (const install of installs) {
     const key = `${install.repo}@${install.ref}`;
@@ -173,8 +213,17 @@ export async function runInstallCommand(
   }
 
   if (options.json) {
-    console.log(JSON.stringify({ results }, null, 2));
+    console.log(JSON.stringify({ save: saveResult, results }, null, 2));
     return;
+  }
+  if (saveResult) {
+    const dryRunPrefix = options.dryRun ? "dry-run: " : "";
+    const skillLabel = options.skill
+      ? `${options.repo}/${options.skill}`
+      : options.repo;
+    console.log(
+      `${dryRunPrefix}${saveResult.status}: ${skillLabel} -> ${saveResult.path}`,
+    );
   }
   for (const result of results) {
     console.log(`${result.status}: ${result.skill} -> ${result.destination}`);

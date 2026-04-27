@@ -11,6 +11,10 @@
 - Support installing one skill with `--repo` and `--skill`.
 - Support installing all skills in a repo when `--repo` is provided without `--skill`.
 - Support batch installation from `.brasa/skills.install.json` through `--skills`.
+- Support adding or updating install-file entries with `brasa-skills add --skills <file> --repo <owner/repo> [--skill <name>]`.
+- Support `brasa-skills install --skills <file> --repo <owner/repo> [--skill <name>] --save` to install and upsert the requested entry in the same command.
+- `--save` MUST require an explicit `--skills` file and `--repo` so the CLI never guesses which repository install list to mutate.
+- Saved install entries MUST be deduplicated by `repo` plus optional `skill`, preserving repo-wide entries as distinct from per-skill entries.
 - Support destination flags `--codex`, `--agents`, `--project`, and `--global`.
 - Default destination MUST be project-local `.codex/skills`.
 - Update already installed skills by replacing them transactionally.

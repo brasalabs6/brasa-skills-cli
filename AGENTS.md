@@ -14,6 +14,7 @@ This repository owns the `@brasalabs/skills` TypeScript package and `brasa-skill
 
 - Keep the CLI focused on skill discovery, validation, installation, and update workflows.
 - Keep `.brasa/skills.marketplace.json` and `.brasa/skills.install.json` schemas backward compatible within the same `schemaVersion`.
+- Install-file mutation commands MUST require an explicit `--skills` path and MUST deduplicate entries by `repo` plus optional `skill`.
 - Reject absolute paths and parent-directory traversal in skill paths before any filesystem write.
 - Updates MUST replace installed skill directories transactionally rather than merging files.
 - Automatic skill updates MUST be opt-in and MUST NOT run as an unattended daemon or cron job by default.

@@ -81,6 +81,7 @@ export interface InstallOptions extends DestinationOptions {
   ref?: string;
   marketplace?: string;
   dryRun?: boolean;
+  save?: boolean;
   json?: boolean;
   cwd?: string;
   home?: string;

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import { runAddCommand } from "./commands/add.js";
 import { runInstallCommand } from "./commands/install.js";
 import { runListCommand } from "./commands/list.js";
 import {
@@ -32,6 +33,7 @@ addDestinationOptions(
     .option("--repo <owner/repo>", "Skill repository")
     .option("--skill <name>", "Specific skill to install from --repo")
     .option("--skills <file>", "Batch install JSON file")
+    .option("--save", "Save the requested --repo/--skill into --skills")
     .option("--ref <ref>", "Git ref to install", "main")
     .option("--marketplace <file>", "Additional marketplace JSON file")
     .option("--dry-run", "Print actions without writing files")
@@ -41,8 +43,34 @@ addDestinationOptions(
     repo: options.repo,
     skill: options.skill,
     skillsFile: options.skills,
+    save: options.save,
     ref: options.ref,
     marketplace: options.marketplace,
+    codex: options.codex,
+    agents: options.agents,
+    project: options.project,
+    global: options.global,
+    dryRun: options.dryRun,
+    json: options.json,
+  });
+});
+
+addDestinationOptions(
+  program
+    .command("add")
+    .description("Add or update an entry in a .brasa/skills.install.json file.")
+    .option("--skills <file>", "Install JSON file to update")
+    .option("--repo <owner/repo>", "Skill repository")
+    .option("--skill <name>", "Specific skill to add from --repo")
+    .option("--ref <ref>", "Git ref to save", "main")
+    .option("--dry-run", "Print actions without writing files")
+    .option("--json", "Print JSON output"),
+).action(async (options) => {
+  await runAddCommand({
+    skillsFile: options.skills,
+    repo: options.repo,
+    skill: options.skill,
+    ref: options.ref,
     codex: options.codex,
     agents: options.agents,
     project: options.project,
