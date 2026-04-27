@@ -1,0 +1,63 @@
+{
+  "$schema": "https://raw.githubusercontent.com/brasalabs6/brasa-skills-cli/main/schemas/skills-marketplace.schema.json",
+  "schemaVersion": 1,
+  "name": "brasalabs-skills",
+  "repositories": [
+    {
+      "repo": "brasalabs6/skills-for-planning",
+      "defaultRef": "main",
+      "description": "BrasaLabs planning, plan execution, reporting, handoff, and issue-management skills.",
+      "skills": [
+        {
+          "name": "create-changes-plan",
+          "path": "create-changes-plan",
+          "description": "Create structured change plans under changes/.",
+          "tags": ["planning", "changes"]
+        },
+        {
+          "name": "create-codebase-report",
+          "path": "create-codebase-report",
+          "description": "Audit plan implementation and produce codebase reports.",
+          "tags": ["planning", "reports"]
+        },
+        {
+          "name": "execute-change-plan",
+          "path": "execute-change-plan",
+          "description": "Execute existing change plans item by item.",
+          "tags": ["planning", "execution"]
+        },
+        {
+          "name": "issue-management",
+          "path": "issue-management",
+          "description": "Create, triage, update, and archive issue artifacts.",
+          "tags": ["issues", "governance"]
+        },
+        {
+          "name": "session-handoff-logging",
+          "path": "session-handoff-logging",
+          "description": "Produce structured handoff and session logs.",
+          "tags": ["handoff", "sessions"]
+        }
+      ]
+    },
+    {
+      "repo": "brasalabs6/skills-for-git",
+      "defaultRef": "main",
+      "description": "BrasaLabs Git workflow and GitHub Projects skills.",
+      "skills": [
+        {
+          "name": "git-workflow",
+          "path": "git-workflow",
+          "description": "Manage source code changes with Git, GitHub, and GitLab.",
+          "tags": ["git", "workflow"]
+        },
+        {
+          "name": "github-projects",
+          "path": "github-projects",
+          "description": "Operate GitHub Projects through the GraphQL API.",
+          "tags": ["github", "projects"]
+        }
+      ]
+    }
+  ]
+}
