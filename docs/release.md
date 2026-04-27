@@ -23,7 +23,7 @@ This runs:
 ```bash
 pnpm build
 npm pack
-npm install -g ./brasalabs-skills-0.1.0.tgz
+npm install -g ./brasalabs-skills-0.2.0.tgz
 brasa-skills --help
 ```
 
@@ -33,7 +33,7 @@ For project-local testing without global install:
 tmp="$(mktemp -d)"
 cd "$tmp"
 npm init -y
-npm install /home/guilherme/brainstorm/brasa-skills-cli/brasalabs-skills-0.1.0.tgz
+npm install /home/guilherme/brainstorm/brasa-skills-cli/brasalabs-skills-0.2.0.tgz
 ./node_modules/.bin/brasa-skills list
 ```
 

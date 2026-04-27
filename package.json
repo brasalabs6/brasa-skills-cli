@@ -1,6 +1,6 @@
 {
   "name": "@brasalabs/skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "description": "BrasaLabs CLI for installing and updating Codex and Agents skills from BrasaLabs skill repositories.",
