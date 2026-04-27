@@ -152,7 +152,7 @@ export async function fetchRemoteMarketplace(
   ref: string,
 ): Promise<unknown> {
   const { owner, name } = splitRepo(repo);
-  const url = `https://raw.githubusercontent.com/${owner}/${name}/${encodeURIComponent(ref)}/.brasa/skills.marketplace.json`;
+  const url = `https://raw.githubusercontent.com/${owner}/${name}/${encodeURIComponent(ref)}/.llms/skills.marketplace.json`;
   const response = await fetch(url, { headers: githubHeaders() });
   if (!response.ok) {
     throw new BrasaSkillsError(

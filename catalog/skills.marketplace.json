@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/brasalabs6/brasa-skills-cli/main/schemas/skills-marketplace.schema.json",
+  "$schema": "https://raw.githubusercontent.com/brasalabs6/schemas/main/json/skills/marketplace.schema.json",
   "schemaVersion": 1,
   "name": "brasalabs-skills",
   "repositories": [

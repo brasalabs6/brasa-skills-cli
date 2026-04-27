@@ -7,10 +7,10 @@ Automatic skill updates must be opt-in and reviewable. The CLI must not enable a
 Use an explicit command invocation from the project that owns the destination skills:
 
 ```bash
-brasa-skills install --skills .brasa/skills.install.json
+brasa-skills install --project
 ```
 
-This keeps updates deterministic because the JSON file names the repos, skills, target, scope, and ref.
+This reads `.llms/skills.json` from the project, keeping updates deterministic because the JSON file names the repos, skills, target, scope, and ref. Use `--skills <file>` only when intentionally updating from a custom install file.
 
 ## Recommended Future Strategy
 

@@ -13,7 +13,7 @@ This repository owns the `@brasalabs/skills` TypeScript package and `brasa-skill
 ## Repository Rules
 
 - Keep the CLI focused on skill discovery, validation, installation, and update workflows.
-- Keep legacy schema files backward compatible within the same `schemaVersion` until the `.llms` migration removes them from active use.
+- Treat `brasalabs6/schemas` as the canonical JSON Schema owner for `.llms` skill manifests; local runtime validation may use equivalent TypeScript schemas but must not claim canonical schema ownership.
 - Install-file mutation commands MUST write to the resolved `.llms/skills.json` default when `--skills` is omitted, MUST preserve `--skills` as the explicit custom-file override, and MUST deduplicate entries by `repo` plus optional `skill`.
 - Reject absolute paths and parent-directory traversal in skill paths before any filesystem write.
 - Updates MUST replace installed skill directories transactionally rather than merging files.
@@ -38,5 +38,5 @@ This repository owns the `@brasalabs/skills` TypeScript package and `brasa-skill
 
 - `README.md`
 - `SPECs.md`
-- `schemas/skills-marketplace.schema.json`
-- `schemas/skills-install.schema.json`
+- `brasalabs6/schemas/json/skills/marketplace.schema.json`
+- `brasalabs6/schemas/json/skills/skills.schema.json`

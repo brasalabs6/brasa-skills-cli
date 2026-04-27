@@ -21,7 +21,7 @@ afterEach(async () => {
 describe("install file writer", () => {
   it("creates a new install file with defaults", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, ".brasa", "skills.install.json");
+    const file = path.join(dir, ".llms", "skills.json");
 
     const result = await saveInstallEntry({
       file,
@@ -52,7 +52,7 @@ describe("install file writer", () => {
 
   it("adds a repo-wide entry without a skill", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, ".brasa", "skills.install.json");
+    const file = path.join(dir, ".llms", "skills.json");
 
     const result = await saveInstallEntry({
       file,
@@ -72,7 +72,7 @@ describe("install file writer", () => {
 
   it("does not duplicate an unchanged entry", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, "skills.install.json");
+    const file = path.join(dir, "skills.json");
     await saveInstallEntry({
       file,
       repo: "brasalabs6/skills-for-git",
@@ -97,7 +97,7 @@ describe("install file writer", () => {
 
   it("updates an existing entry in place", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, "skills.install.json");
+    const file = path.join(dir, "skills.json");
     await saveInstallEntry({
       file,
       repo: "brasalabs6/skills-for-git",
@@ -130,7 +130,7 @@ describe("install file writer", () => {
 
   it("does not write during dry-run", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, "skills.install.json");
+    const file = path.join(dir, "skills.json");
 
     await saveInstallEntry({
       file,
@@ -147,7 +147,7 @@ describe("install file writer", () => {
 
   it("rejects invalid existing JSON without overwriting it", async () => {
     const dir = await makeTempDir();
-    const file = path.join(dir, "skills.install.json");
+    const file = path.join(dir, "skills.json");
     await writeFile(file, "{ bad json", "utf8");
 
     await expect(

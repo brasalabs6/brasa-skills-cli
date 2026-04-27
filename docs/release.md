@@ -16,7 +16,7 @@ This runs:
 - `npm pack --dry-run`;
 - a real `npm pack`;
 - local install of the packed tarball into a temporary project;
-- binary smoke checks for `brasa-skills --help`, `list`, `validate-marketplace`, and `validate-skills`.
+- binary smoke checks for `brasa-skills --help`, `list`, `validate-marketplace`, `validate-skills`, `.llms/skills.json` add/install flows, and `.llms/skills.marketplace.json` remote lookup.
 
 ## Local Tarball Install
 

@@ -10,7 +10,7 @@ import type {
 } from "./types.js";
 
 const INSTALL_SCHEMA_URL =
-  "https://raw.githubusercontent.com/brasalabs6/brasa-skills-cli/main/schemas/skills-install.schema.json";
+  "https://raw.githubusercontent.com/brasalabs6/schemas/main/json/skills/skills.schema.json";
 
 export type InstallFileSaveStatus =
   | "created"

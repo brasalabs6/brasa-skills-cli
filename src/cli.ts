@@ -92,7 +92,7 @@ program
 
 program
   .command("validate-marketplace <file>")
-  .description("Validate a .brasa/skills.marketplace.json file.")
+  .description("Validate a .llms/skills.marketplace.json file.")
   .option("--json", "Print JSON output")
   .action(async (file, options) => {
     await runValidateMarketplaceCommand(file, options);
@@ -100,7 +100,7 @@ program
 
 program
   .command("validate-skills <file>")
-  .description("Validate a .brasa/skills.install.json file.")
+  .description("Validate a .llms/skills.json file.")
   .option("--json", "Print JSON output")
   .action(async (file, options) => {
     await runValidateSkillsCommand(file, options);
