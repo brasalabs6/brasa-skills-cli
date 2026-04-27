@@ -152,12 +152,21 @@ export async function fetchRemoteMarketplace(
   ref: string,
 ): Promise<unknown> {
   const { owner, name } = splitRepo(repo);
-  const url = `https://raw.githubusercontent.com/${owner}/${name}/${encodeURIComponent(ref)}/.llms/skills.marketplace.json`;
+  const url = `https://api.github.com/repos/${owner}/${name}/contents/.llms/skills.marketplace.json?ref=${encodeURIComponent(ref)}`;
   const response = await fetch(url, { headers: githubHeaders() });
   if (!response.ok) {
     throw new BrasaSkillsError(
       `Remote marketplace not found for ${repo}@${ref}: HTTP ${response.status}`,
     );
   }
-  return response.json();
+  const payload = (await response.json()) as {
+    content?: string;
+    encoding?: string;
+  };
+  if (payload.encoding !== "base64" || !payload.content) {
+    throw new BrasaSkillsError(
+      `Remote marketplace for ${repo}@${ref} had an unexpected GitHub contents response.`,
+    );
+  }
+  return JSON.parse(Buffer.from(payload.content, "base64").toString("utf8"));
 }
