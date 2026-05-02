@@ -43,6 +43,46 @@ Relevancia organizacional inferida: **media**. O repo `brasa-skills-cli` atua co
 3. Adotar checklist de readiness proporcional ao risco.
 4. Revisar em lote repos de mesma familia para reduzir duplicacao operacional.
 
+## Documentacao Mapeada
+
+Total de arquivos de documentacao detectados: **13**.
+
+### Arquivos
+
+- `.llms/reports/architecture-alignment.md`
+- `.llms/reports/critical-relevance-analysis.md`
+- `.llms/reports/cross-repository-relationships.md`
+- `.llms/reports/mvp-production-readiness.md`
+- `AGENTS.md`
+- `CHANGELOG.md`
+- `README.md`
+- `SPECs.md`
+- `docs/automatic-updates.md`
+- `docs/release.md`
+- `docs/releases/v0.2.0.md`
+- `tests/fixtures/local-repo/alpha-skill/SKILL.md`
+- `tests/fixtures/local-repo/beta-skill/SKILL.md`
+
+### Distribuicao Por Tipo
+
+- `agent/governance guidance`: 1
+- `docs/reference/specs`: 3
+- `entrypoint/readme`: 1
+- `llms/reports`: 4
+- `normative/readiness contract`: 1
+- `other docs`: 3
+
+## Critica Da Documentacao
+
+- A cobertura documental basica parece adequada; o proximo ganho e explicitar consumidores, readiness e criterio de producao.
+
+## Recomendacoes Documentais
+
+1. Manter `README.md` como porta de entrada operacional e de produto.
+2. Manter `AGENTS.md` e specs locais como contratos normativos, nao como historico solto.
+3. Mover decisoes duraveis para specs/decisions e deixar reports como evidencia de auditoria.
+4. Linkar explicitamente consumidores, repos relacionados e validacoes antes de declarar prontidao de producao.
+
 ## Evidencias
 
 - `README.md:1`
