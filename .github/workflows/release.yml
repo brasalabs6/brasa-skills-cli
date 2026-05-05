@@ -77,7 +77,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
-          registry-url: "https://npm.brasaai.com.br/"
           cache: pnpm
 
       - name: Configure npm registry
