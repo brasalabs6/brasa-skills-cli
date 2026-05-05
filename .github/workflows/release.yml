@@ -96,11 +96,11 @@ jobs:
           {
             printf '@brasalabs:registry=%s\n' "${registry_url}"
             if [ -n "${VERDACCIO_NPM_AUTH:-}" ]; then
-              printf '//%s/:_auth=${VERDACCIO_NPM_AUTH}\n' "${registry_host}"
+              printf '//%s/:_auth=%s\n' "${registry_host}" "${VERDACCIO_NPM_AUTH}"
               printf 'email=ops@brasaai.com.br\n'
               printf '//%s/:always-auth=true\n' "${registry_host}"
             elif [ -n "${NODE_AUTH_TOKEN:-}" ]; then
-              printf '//%s/:_authToken=${NODE_AUTH_TOKEN}\n' "${registry_host}"
+              printf '//%s/:_authToken=%s\n' "${registry_host}" "${NODE_AUTH_TOKEN}"
               printf '//%s/:always-auth=true\n' "${registry_host}"
             fi
           } > "${npmrc}"
@@ -110,7 +110,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate package
-        run: pnpm check:release
+        run: pnpm check && npm pack --dry-run && pnpm release:dry-run
 
       - name: Require npm auth for publish
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
