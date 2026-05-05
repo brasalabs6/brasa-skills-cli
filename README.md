@@ -150,7 +150,7 @@ pnpm release:pack
 
 Run `pnpm check:br-integration` when the sibling `../cli` workspace is available to pack local `@brasalabs/cli-core`, `@brasalabs/cli`, and `@brasalabs/skills` tarballs and smoke `br skills`.
 
-For local tarball installation, Verdaccio publishing, and GitHub Actions release gates, see `docs/release.md`.
+For local tarball installation, public npm publishing, and GitHub Actions release gates, see `docs/release.md`.
 
 ## Automatic Updates
 

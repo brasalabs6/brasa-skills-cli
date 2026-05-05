@@ -2,10 +2,10 @@
 
 `brasa-skills-cli` separates release readiness from publish authorization.
 
-The package publishes to the BrasaLabs Verdaccio registry:
+The package publishes to public npm:
 
 ```text
-https://npm.brasaai.com.br/
+https://registry.npmjs.org/
 ```
 
 ## Local Release Check
@@ -44,7 +44,7 @@ The smoke proves `br skills` and `brasa-skills` share the same command implement
 
 ```bash
 pnpm release:pack
-npm install -g ./dist/release/brasalabs-skills-0.2.0.tgz
+npm install -g ./dist/release/brasalabs-skills-*.tgz
 brasa-skills --help
 ```
 
@@ -54,12 +54,12 @@ For project-local testing without global install:
 tmp="$(mktemp -d)"
 cd "$tmp"
 npm init -y
-npm install /home/guilherme/brainstorm/brasa-skills-cli/dist/release/brasalabs-skills-0.2.0.tgz
+npm install /home/guilherme/brainstorm/brasa-skills-cli/dist/release/brasalabs-skills-*.tgz
 ./node_modules/.bin/brasa-skills list
 ```
 
 ## Publish Gate
 
-Do not run `pnpm release:publish` unless npm authentication and BrasaLabs release policy are confirmed for this package. If `npm whoami --registry=https://npm.brasaai.com.br/` fails, stop at pack/install validation and record the package artifact evidence instead.
+Do not run `pnpm release:publish` unless npm authentication and BrasaLabs release policy are confirmed for this package. If `npm whoami --registry=https://registry.npmjs.org/` fails, stop at pack/install validation and record the package artifact evidence instead.
 
-GitHub Actions release tags publish through the reusable `brasalabs6/github-playbook` npm package release workflow when `BRASALABS_NPM_TOKEN` or `NPM_TOKEN` is available.
+GitHub Actions release tags publish to public npm when `NPM_TOKEN` or `BRASALABS_NPM_TOKEN` is available.

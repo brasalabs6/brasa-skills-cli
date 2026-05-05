@@ -21,7 +21,8 @@
     "CHANGELOG.md"
   ],
   "publishConfig": {
-    "registry": "https://npm.brasaai.com.br/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "scripts": {
     "build": "rm -rf dist && tsc && node scripts/copy-assets.mjs",

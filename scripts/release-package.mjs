@@ -8,7 +8,8 @@ const releaseDir = join(repoRoot, "dist", "release");
 const registry =
   process.env.BRASALABS_NPM_REGISTRY ??
   process.env.NPM_CONFIG_REGISTRY ??
-  "https://npm.brasaai.com.br/";
+  "https://registry.npmjs.org/";
+const publishAccess = process.env.NPM_PUBLISH_ACCESS ?? "";
 const mode = process.argv[2] ?? "dry-run";
 const packageName = "@brasalabs/skills";
 const tarballPrefix = "brasalabs-skills-";
@@ -48,6 +49,9 @@ const publishArgs = [
   registry,
   "--no-git-checks",
 ];
+if (publishAccess) {
+  publishArgs.push("--access", publishAccess);
+}
 if (mode === "dry-run") {
   publishArgs.push("--dry-run");
 }

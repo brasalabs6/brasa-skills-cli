@@ -81,9 +81,9 @@ jobs:
 
       - name: Configure npm registry
         env:
-          REGISTRY_URL: "https://npm.brasaai.com.br/"
+          REGISTRY_URL: "https://registry.npmjs.org/"
           NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
-          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
+          NPM_PUBLISH_ACCESS: "public"
         shell: bash
         run: |
           set -euo pipefail
@@ -93,17 +93,16 @@ jobs:
           registry_host="${registry_host%/}"
           npmrc="${RUNNER_TEMP}/brasalabs-npmrc"
           {
+            printf 'registry=%s\n' "${registry_url}"
             printf '@brasalabs:registry=%s\n' "${registry_url}"
-            if [ -n "${VERDACCIO_NPM_AUTH:-}" ]; then
-              printf '//%s/:_auth=%s\n' "${registry_host}" "${VERDACCIO_NPM_AUTH}"
-              printf 'email=ops@brasaai.com.br\n'
-              printf '//%s/:always-auth=true\n' "${registry_host}"
-            elif [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+            if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
               printf '//%s/:_authToken=%s\n' "${registry_host}" "${NODE_AUTH_TOKEN}"
               printf '//%s/:always-auth=true\n' "${registry_host}"
             fi
           } > "${npmrc}"
           echo "NPM_CONFIG_USERCONFIG=${npmrc}" >> "${GITHUB_ENV}"
+          echo "BRASALABS_NPM_REGISTRY=${registry_url}" >> "${GITHUB_ENV}"
+          echo "NPM_PUBLISH_ACCESS=${NPM_PUBLISH_ACCESS}" >> "${GITHUB_ENV}"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -115,12 +114,11 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
-          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${NODE_AUTH_TOKEN:-}" ] && [ -z "${VERDACCIO_NPM_AUTH:-}" ]; then
-            echo "BRASALABS_NPM_AUTH, VERDACCIO_NPM_AUTH, BRASALABS_NPM_TOKEN, or NPM_TOKEN is required to publish." >&2
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "BRASALABS_NPM_TOKEN or NPM_TOKEN is required for public npm publish." >&2
             exit 1
           fi
 
@@ -128,5 +126,5 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
-          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
+          NPM_PUBLISH_ACCESS: "public"
         run: pnpm release:publish
