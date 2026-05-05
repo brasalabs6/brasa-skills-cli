@@ -22,13 +22,112 @@ concurrency:
 
 jobs:
   package-release:
-    uses: brasalabs6/github-playbook/.github/workflows/npm-package-release.yml@main
-    with:
-      node_version: "22"
-      pnpm_version: "10.21.0"
-      registry_url: "https://npm.brasaai.com.br/"
-      validation_command: "pnpm check:release"
-      dry_run_command: ""
-      publish_command: "pnpm release:publish"
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate release tag shape
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag '${GITHUB_REF_NAME}' must match vX.Y.Z or vX.Y.Z-prerelease." >&2
+            exit 1
+          fi
+
+      - name: Validate tag belongs to default branch
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "${DEFAULT_BRANCH}" --depth=1
+          git merge-base --is-ancestor "${GITHUB_SHA}" "origin/${DEFAULT_BRANCH}" || {
+            echo "Release tag ${GITHUB_REF_NAME} must point at a commit on ${DEFAULT_BRANCH}." >&2
+            exit 1
+          }
+
+      - name: Validate tag matches package version
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          TAG_VERSION: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs";
+
+          const tagVersion = process.env.TAG_VERSION.replace(/^v/, "");
+          const manifest = JSON.parse(readFileSync("package.json", "utf8"));
+          console.log(`${manifest.name}@${manifest.version} (package.json)`);
+          if (manifest.version !== tagVersion) {
+            throw new Error(`${manifest.name}@${manifest.version} does not match release tag v${tagVersion}.`);
+          }
+          NODE
+
+      - uses: pnpm/action-setup@v5
+        with:
+          version: "10.21.0"
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          registry-url: "https://npm.brasaai.com.br/"
+          cache: pnpm
+
+      - name: Configure npm registry
+        env:
+          REGISTRY_URL: "https://npm.brasaai.com.br/"
+          NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
+          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          registry_url="${REGISTRY_URL%/}/"
+          registry_host="${registry_url#https://}"
+          registry_host="${registry_host#http://}"
+          registry_host="${registry_host%/}"
+          npmrc="${RUNNER_TEMP}/brasalabs-npmrc"
+          {
+            printf '@brasalabs:registry=%s\n' "${registry_url}"
+            if [ -n "${VERDACCIO_NPM_AUTH:-}" ]; then
+              printf '//%s/:_auth=${VERDACCIO_NPM_AUTH}\n' "${registry_host}"
+              printf 'email=ops@brasaai.com.br\n'
+              printf '//%s/:always-auth=true\n' "${registry_host}"
+            elif [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+              printf '//%s/:_authToken=${NODE_AUTH_TOKEN}\n' "${registry_host}"
+              printf '//%s/:always-auth=true\n' "${registry_host}"
+            fi
+          } > "${npmrc}"
+          echo "NPM_CONFIG_USERCONFIG=${npmrc}" >> "${GITHUB_ENV}"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate package
+        run: pnpm check:release
+
+      - name: Require npm auth for publish
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
+          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ] && [ -z "${VERDACCIO_NPM_AUTH:-}" ]; then
+            echo "BRASALABS_NPM_AUTH, VERDACCIO_NPM_AUTH, BRASALABS_NPM_TOKEN, or NPM_TOKEN is required to publish." >&2
+            exit 1
+          fi
+
+      - name: Publish package
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.BRASALABS_NPM_TOKEN || secrets.NPM_TOKEN }}
+          VERDACCIO_NPM_AUTH: ${{ secrets.BRASALABS_NPM_AUTH || secrets.VERDACCIO_NPM_AUTH }}
+        run: pnpm release:publish

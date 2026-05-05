@@ -15,10 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  package-ci:
-    uses: brasalabs6/github-playbook/.github/workflows/npm-package-ci.yml@main
-    with:
-      node_version: "22"
-      pnpm_version: "10.21.0"
-      validation_command: "pnpm check"
-    secrets: inherit
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v5
+        with:
+          version: "10.21.0"
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate package
+        run: pnpm check
