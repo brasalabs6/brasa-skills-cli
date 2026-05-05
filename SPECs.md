@@ -8,6 +8,9 @@
 
 - Provide a TypeScript CLI package named `@brasalabs/skills`.
 - Provide a binary named `brasa-skills`.
+- Export a `brModule` compatible with the `@brasalabs/cli-core` `BrCommandModule` shape so `@brasalabs/cli` can mount the same commands under `br skills`.
+- Preserve standalone and root command parity by registering `install`, `add`, `list`, `validate-marketplace`, and `validate-skills` through one shared TypeScript command registration function.
+- Print the CLI version from `package.json` rather than a hardcoded version string.
 - Support installing one skill with `--repo` and `--skill`.
 - Support installing all skills in a repo when `--repo` is provided without `--skill`.
 - Support batch installation from the resolved `.llms/skills.json` default or a custom install file through `--skills`.
@@ -21,6 +24,7 @@
 - Validate marketplace and install files against TypeScript schemas aligned with canonical JSON Schemas in `brasalabs6/schemas`.
 - Include an embedded marketplace for `brasalabs6/skills-for-planning` and `brasalabs6/skills-for-git`.
 - Provide release-readiness validation for build, pack, local tarball install, and CLI smoke checks.
+- Provide an integration smoke script for local root CLI tarballs that validates `br skills list` and `br skills validate-skills`.
 - Keep automatic updates opt-in and reviewable; no background updater is enabled by default.
 
 ## Non-Goals
@@ -28,3 +32,4 @@
 - Do not migrate every workspace skill repository in v1.
 - Do not replace Codex plugin `.codex-plugin/plugin.json` manifests.
 - Do not manage secrets or authentication setup beyond using existing `GITHUB_TOKEN` or `GH_TOKEN` when present.
+- Do not move skills domain behavior into the root `br` CLI; the root package only mounts this module.

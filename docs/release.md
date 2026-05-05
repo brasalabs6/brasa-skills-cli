@@ -18,6 +18,21 @@ This runs:
 - local install of the packed tarball into a temporary project;
 - binary smoke checks for `brasa-skills --help`, `list`, `validate-marketplace`, `validate-skills`, `.llms/skills.json` add/install flows, and `.llms/skills.marketplace.json` remote lookup.
 
+## Root CLI Integration Smoke
+
+When the sibling `../cli` workspace is available, run:
+
+```bash
+pnpm check:br-integration
+```
+
+This packs local `@brasalabs/cli-core`, `@brasalabs/cli`, and `@brasalabs/skills` tarballs into a temporary project and verifies:
+
+- `br skills list --json`
+- `br skills validate-skills <file>`
+
+The smoke proves `br skills` and `brasa-skills` share the same command implementation through the exported `brModule`.
+
 ## Local Tarball Install
 
 ```bash

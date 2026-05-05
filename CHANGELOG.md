@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-- No unreleased changes yet.
+- Export `brModule` so the root `@brasalabs/cli` package can mount the existing skills command implementation under `br skills`.
+- Refactor command registration so `brasa-skills ...` and `br skills ...` share the same TypeScript command surface.
+- Read `brasa-skills --version` from `package.json` instead of the stale hardcoded `0.1.0`.
+- Add local root CLI integration smoke coverage for `br skills list --json` and `br skills validate-skills`.
 
 ## 0.2.0 - 2026-04-27
 

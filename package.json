@@ -9,6 +9,12 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": [
     "dist",
     "README.md",
@@ -22,6 +28,7 @@
     "start": "node dist/cli.js",
     "pack:dry-run": "pnpm build && npm pack --dry-run",
     "pack:check": "node scripts/check-package-artifact.mjs",
+    "check:br-integration": "node scripts/check-br-integration-artifact.mjs",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "check:release": "pnpm check && npm pack --dry-run && pnpm pack:check"
   },

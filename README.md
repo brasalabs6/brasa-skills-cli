@@ -8,8 +8,10 @@ It installs and updates Codex/Agents skills from BrasaLabs skill repositories us
 
 ```bash
 brasa-skills list
+br skills list
 brasa-skills list --repo brasalabs6/skills-for-git
 brasa-skills install --repo brasalabs6/skills-for-planning
+br skills install --repo brasalabs6/skills-for-planning
 brasa-skills install --repo brasalabs6/skills-for-planning --skill create-changes-plan
 brasa-skills install --repo brasalabs6/skills-for-git --skill github-projects --global --agents
 brasa-skills install --project
@@ -19,7 +21,10 @@ brasa-skills add --skills custom-skills.json --repo brasalabs6/skills-for-git --
 brasa-skills install --repo brasalabs6/skills-for-git --skill github-projects --save
 brasa-skills validate-marketplace .llms/skills.marketplace.json
 brasa-skills validate-skills .llms/skills.json
+br skills validate-skills .llms/skills.json
 ```
+
+`brasa-skills` remains the standalone compatibility binary. When `@brasalabs/cli` and `@brasalabs/skills` are installed together, the root `br` binary loads the exported `brModule` and exposes the same command implementation under `br skills`.
 
 ## Destination Flags
 
@@ -131,6 +136,7 @@ pnpm typecheck
 pnpm lint
 pnpm test
 pnpm build
+pnpm check:br-integration
 ```
 
 ## Release Readiness
@@ -140,6 +146,8 @@ Run the release readiness matrix before publishing or cutting a GitHub release:
 ```bash
 pnpm check:release
 ```
+
+Run `pnpm check:br-integration` when the sibling `../cli` workspace is available to pack local `@brasalabs/cli-core`, `@brasalabs/cli`, and `@brasalabs/skills` tarballs and smoke `br skills`.
 
 For local tarball installation and publish gates, see `docs/release.md`.
 
